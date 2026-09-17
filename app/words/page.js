@@ -62,7 +62,7 @@ export default function WordsPage() {
 
       {words.length === 0 ? (
         <div className="mt-10 rounded-xl border bg-white p-8 text-center">
-          <p className="text-gray-600">You haven't added any words yet.</p>
+          <p className="text-gray-600">You haven&apos;t added any words yet.</p>
         </div>
       ) : (
         <div className="mt-8 space-y-4">
@@ -84,7 +84,7 @@ export default function WordsPage() {
 
               {word.example && (
                 <p className="mt-4 text-sm italic text-gray-500">
-                  "{word.example}"
+                  &quot;{word.example}&quot;
                 </p>
               )}
 
