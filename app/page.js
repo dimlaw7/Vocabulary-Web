@@ -103,6 +103,15 @@ export default function Home() {
 
       await updateWordAfterReview(word.id, nextLearningState);
 
+      setWord((current) => ({
+        ...current,
+        repetitions: nextLearningState.repetitions,
+        interval: nextLearningState.interval,
+        ease_factor: nextLearningState.easeFactor,
+        next_review_at: nextLearningState.nextReviewAt,
+        last_reviewed_at: new Date().toISOString(),
+      }));
+
       setResult(reviewResult);
     } catch (error) {
       console.error("Failed to save review:", error);
@@ -143,6 +152,12 @@ export default function Home() {
         <p className="mt-4 text-4xl font-bold">{word.word}</p>
 
         <p className="mt-4 text-gray-600">{word.definition}</p>
+
+        {word.next_review_at && (
+          <p className="mt-4 text-sm text-gray-500">
+            Next review: {new Date(word.next_review_at).toLocaleDateString()}
+          </p>
+        )}
 
         <button
           onClick={loadWord}
