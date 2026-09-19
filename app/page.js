@@ -153,6 +153,12 @@ export default function Home() {
 
         <p className="mt-4 text-gray-600">{word.definition}</p>
 
+        {word.example && (
+          <p className="mt-5 text-center italic text-gray-500">
+            Example: &quot;{word.example}&quot;
+          </p>
+        )}
+
         {word.next_review_at && (
           <p className="mt-4 text-sm text-gray-500">
             Next review: {new Date(word.next_review_at).toLocaleDateString()}
@@ -180,12 +186,6 @@ export default function Home() {
       <p className="mt-5 text-center text-2xl leading-relaxed">
         &quot;{word.definition}&quot;
       </p>
-
-      {word.example && (
-        <p className="mt-5 text-center italic text-gray-500">
-          Example: &quot;{word.example}&quot;
-        </p>
-      )}
 
       <input
         value={answer}
