@@ -1,9 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import LeafIcon from "../public/icon-leaf.png";
 import Image from "next/image";
 import Sidebar from "./components/Sidebar";
+import HeroImage from "../public/hero.svg";
+import Header from "./components/Header";
+import Hero from "./components/Hero";
 
 const stats = [
   {
@@ -57,6 +59,16 @@ export default function Home() {
       <div className="flex min-h-screen">
         {/* Sidebar */}
         <Sidebar />
+
+        {/* Main content */}
+        <section className="flex-1">
+          {/* Header */}
+          <Header />
+
+          <div className="mx-auto max-w-7xl px-6 py-8 lg:px-10">
+            <Hero />
+          </div>
+        </section>
       </div>
     </main>
   );
