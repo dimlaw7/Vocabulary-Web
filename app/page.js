@@ -1,13 +1,14 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import { getDashboardData } from "../lib/dashboard";
 import Image from "next/image";
 import Sidebar from "./components/Sidebar";
-import HeroImage from "../public/hero.svg";
 import Header from "./components/Header";
 import Hero from "./components/Hero";
-import Stats from "./components/Stats";
 import RecentWords from "./components/RecentWords";
+import StatCard from "./components/StatCard";
 
 const stats = [
   {
@@ -56,6 +57,42 @@ const recentWords = [
 ];
 
 export default function Home() {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadDashboard() {
+      try {
+        const dashboardData = await getDashboardData();
+        setData(dashboardData);
+      } catch (error) {
+        console.error("Failed to load dashboard:", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadDashboard();
+  }, []);
+
+  if (loading) {
+    return (
+      <main className="flex min-h-screen items-center justify-center bg-[#F8FAFC]">
+        <p className="text-sm text-slate-500">Loading dashboard...</p>
+      </main>
+    );
+  }
+
+  if (!data) {
+    return (
+      <main className="flex min-h-screen items-center justify-center bg-[#F8FAFC]">
+        <p className="text-sm text-red-500">Unable to load dashboard.</p>
+      </main>
+    );
+  }
+
+  const reviewProgress = data.dueWords > 0 ? 0 : 100;
+
   return (
     <main className="min-h-screen bg-[#F8FAFC] text-[#172554]">
       <div className="flex min-h-screen">
@@ -71,7 +108,31 @@ export default function Home() {
             <Hero />
 
             {/* Stats */}
-            <Stats stats={stats} />
+            <section className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+              <StatCard
+                label="Words saved"
+                value={data.totalWords}
+                detail="In your vocabulary"
+              />
+
+              <StatCard
+                label="Words learned"
+                value={data.learnedWords}
+                detail="Reviewed at least once"
+              />
+
+              <StatCard
+                label="Due for review"
+                value={data.dueWords}
+                detail="Ready to practice"
+              />
+
+              <StatCard
+                label="Recall rate"
+                value={`${data.recallRate}%`}
+                detail="Across your reviews"
+              />
+            </section>
 
             {/* Main grid */}
             <section className="mt-8 grid gap-6 xl:grid-cols-[1.5fr_1fr]">
@@ -88,7 +149,11 @@ export default function Home() {
                     </h3>
 
                     <p className="mt-2 text-sm leading-6 text-slate-500">
-                      You have 8 words ready for active recall.
+                      {data.dueWords === 0
+                        ? "You are all caught up for now."
+                        : `You have ${data.dueWords} ${
+                            data.dueWords === 1 ? "word" : "words"
+                          } ready for active recall.`}
                     </p>
                   </div>
 
@@ -104,16 +169,27 @@ export default function Home() {
                     </span>
 
                     <span className="text-sm font-semibold text-[#2563EB]">
-                      8 words
+                      {data.dueWords} {data.dueWords === 1 ? "word" : "words"}
                     </span>
                   </div>
 
                   <div className="mt-4 h-2 overflow-hidden rounded-full bg-slate-200">
-                    <div className="h-full w-[35%] rounded-full bg-[#2563EB]" />
+                    <div
+                      className="h-full rounded-full bg-[#2563EB]"
+                      style={{
+                        width: `${reviewProgress}%`,
+                      }}
+                    />
                   </div>
 
                   <p className="mt-3 text-xs text-slate-400">
-                    35% of your daily review complete
+                    {reviewProgress}% of your daily review complete
+                  </p>
+
+                  <p className="mt-3 text-xs text-slate-400">
+                    {data.dueWords === 0
+                      ? "All caught up"
+                      : "Ready for your next review"}
                   </p>
                 </div>
 
@@ -121,7 +197,7 @@ export default function Home() {
                   href="/study"
                   className="mt-5 inline-flex rounded-xl bg-[#172554] px-5 py-3 text-sm font-semibold text-white hover:bg-[#0F1C40]"
                 >
-                  Continue review
+                  {data.dueWords > 0 ? "Continue review" : "Practice words"}
                 </Link>
               </div>
 
@@ -162,7 +238,7 @@ export default function Home() {
             </section>
 
             {/* Recent words */}
-            <RecentWords recentWords={recentWords} />
+            <RecentWords recentWords={recentWords} data={data} />
           </div>
         </section>
       </div>
