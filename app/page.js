@@ -6,6 +6,8 @@ import Sidebar from "./components/Sidebar";
 import HeroImage from "../public/hero.svg";
 import Header from "./components/Header";
 import Hero from "./components/Hero";
+import Stats from "./components/Stats";
+import RecentWords from "./components/RecentWords";
 
 const stats = [
   {
@@ -69,22 +71,7 @@ export default function Home() {
             <Hero />
 
             {/* Stats */}
-            <section className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-              {stats.map((stat) => (
-                <div
-                  key={stat.label}
-                  className="rounded-2xl border border-[#E2E8F0] bg-white p-5"
-                >
-                  <p className="text-sm text-slate-500">{stat.label}</p>
-
-                  <p className="mt-2 text-3xl font-bold tracking-tight">
-                    {stat.value}
-                  </p>
-
-                  <p className="mt-1 text-xs text-slate-400">{stat.detail}</p>
-                </div>
-              ))}
-            </section>
+            <Stats stats={stats} />
 
             {/* Main grid */}
             <section className="mt-8 grid gap-6 xl:grid-cols-[1.5fr_1fr]">
@@ -175,49 +162,7 @@ export default function Home() {
             </section>
 
             {/* Recent words */}
-            <section className="mt-8 rounded-2xl border border-[#E2E8F0] bg-white">
-              <div className="flex items-center justify-between border-b border-[#E2E8F0] px-6 py-5">
-                <div>
-                  <h3 className="font-bold">Recent words</h3>
-                  <p className="mt-1 text-sm text-slate-500">
-                    Words you recently added
-                  </p>
-                </div>
-
-                <Link
-                  href="/words"
-                  className="text-sm font-semibold text-[#2563EB]"
-                >
-                  View all
-                </Link>
-              </div>
-
-              <div className="divide-y divide-[#E2E8F0]">
-                {recentWords.map((item) => (
-                  <div
-                    key={item.word}
-                    className="flex items-center justify-between px-6 py-4"
-                  >
-                    <div>
-                      <p className="font-semibold">{item.word}</p>
-                      <p className="mt-1 text-sm text-slate-500">
-                        {item.meaning}
-                      </p>
-                    </div>
-
-                    <span
-                      className={`rounded-full px-3 py-1 text-xs font-medium ${
-                        item.status === "Mastered"
-                          ? "bg-emerald-50 text-emerald-600"
-                          : "bg-blue-50 text-blue-600"
-                      }`}
-                    >
-                      {item.status}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </section>
+            <RecentWords recentWords={recentWords} />
           </div>
         </section>
       </div>
