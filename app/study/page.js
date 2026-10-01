@@ -232,7 +232,7 @@ export default function StudyPage() {
               {word.definition}
             </p>
 
-            {result === "forgot" && word.example && (
+            {word.example && (
               <div className="mt-7 rounded-2xl bg-slate-50 p-5 text-left">
                 <p className="text-xs font-semibold tracking-wider text-slate-400 uppercase">
                   Example
