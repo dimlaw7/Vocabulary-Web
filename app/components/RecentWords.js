@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
 
-export default function RecentWords({ recentWords, data }) {
+export default function RecentWords({ data }) {
   return (
     <section className="mt-8 rounded-2xl border border-[#E2E8F0] bg-white">
       <div className="flex items-center justify-between border-b border-[#E2E8F0] px-6 py-5">

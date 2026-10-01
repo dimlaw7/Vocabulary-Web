@@ -3,58 +3,11 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { getDashboardData } from "../lib/dashboard";
-import Image from "next/image";
 import Sidebar from "./components/Sidebar";
 import Header from "./components/Header";
 import Hero from "./components/Hero";
 import RecentWords from "./components/RecentWords";
 import StatCard from "./components/StatCard";
-
-const stats = [
-  {
-    label: "Words learned",
-    value: "24",
-    detail: "+4 this week",
-  },
-  {
-    label: "Due for review",
-    value: "8",
-    detail: "Ready to practice",
-  },
-  {
-    label: "Recall rate",
-    value: "82%",
-    detail: "Last 30 days",
-  },
-  {
-    label: "Current streak",
-    value: "7",
-    detail: "days",
-  },
-];
-
-const recentWords = [
-  {
-    word: "Diligent",
-    meaning: "Showing careful and persistent effort",
-    status: "Learning",
-  },
-  {
-    word: "Prudent",
-    meaning: "Acting with careful judgment",
-    status: "Learning",
-  },
-  {
-    word: "Integrity",
-    meaning: "Honesty and strong moral principles",
-    status: "Mastered",
-  },
-  {
-    word: "Minimalist",
-    meaning: "Someone who prefers simplicity",
-    status: "Learning",
-  },
-];
 
 export default function Home() {
   const [data, setData] = useState(null);
@@ -105,101 +58,102 @@ export default function Home() {
           <Header />
 
           <div className="mx-auto max-w-7xl px-6 py-8 lg:px-10">
-            <Hero />
-
-            {/* Stats */}
-            <section className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-              <StatCard
-                label="Words saved"
-                value={data.totalWords}
-                detail="In your vocabulary"
-              />
-
-              <StatCard
-                label="Words learned"
-                value={data.learnedWords}
-                detail="Reviewed at least once"
-              />
-
-              <StatCard
-                label="Due for review"
-                value={data.dueWords}
-                detail="Ready to practice"
-              />
-
-              <StatCard
-                label="Recall rate"
-                value={`${data.recallRate}%`}
-                detail="Across your reviews"
-              />
-            </section>
+            {/* <Hero /> */}
 
             {/* Main grid */}
             <section className="mt-8 grid gap-6 xl:grid-cols-[1.5fr_1fr]">
               {/* Continue learning */}
-              <div className="rounded-2xl border border-[#E2E8F0] bg-white p-6">
-                <div className="flex items-start justify-between">
+
+              {data.totalWords === 0 ? (
+                <div className="rounded-2xl border border-[#E2E8F0] bg-white p-6">
                   <div>
                     <p className="text-sm font-medium text-[#2563EB]">
                       Continue learning
                     </p>
-
-                    <h3 className="mt-1 text-2xl font-bold">
-                      Your words are waiting.
-                    </h3>
-
-                    <p className="mt-2 text-sm leading-6 text-slate-500">
-                      {data.dueWords === 0
-                        ? "You are all caught up for now."
-                        : `You have ${data.dueWords} ${
-                            data.dueWords === 1 ? "word" : "words"
-                          } ready for active recall.`}
+                  </div>
+                  <div className="px-6 py-10 text-center">
+                    <p className="text-sm text-slate-500">
+                      You haven&apos;t added any words yet.
                     </p>
-                  </div>
 
-                  <div className="hidden h-12 w-12 items-center justify-center rounded-2xl bg-[#EFF6FF] text-xl text-[#2563EB] sm:flex">
-                    ◉
+                    <Link
+                      href="/add-word"
+                      className="mt-3 inline-block text-sm font-semibold text-[#2563EB]"
+                    >
+                      Add your first word →
+                    </Link>
                   </div>
                 </div>
+              ) : (
+                <div className="rounded-2xl border border-[#E2E8F0] bg-white p-6">
+                  <div className="flex items-start justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-[#2563EB]">
+                        Continue learning
+                      </p>
 
-                <div className="mt-6 rounded-2xl bg-[#F8FAFC] p-5">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-slate-500">
-                      Today&apos;s review
-                    </span>
+                      <h3 className="mt-1 text-2xl font-bold">
+                        Today&apos;s reviews
+                      </h3>
 
-                    <span className="text-sm font-semibold text-[#2563EB]">
-                      {data.dueWords} {data.dueWords === 1 ? "word" : "words"}
-                    </span>
+                      <p className="mt-2 text-sm leading-6 text-slate-500">
+                        {data.dueWords === 0
+                          ? "You are all caught up for now."
+                          : `You have ${data.dueWords} ${
+                              data.dueWords === 1 ? "word" : "words"
+                            } ready for active recall.`}
+                      </p>
+                    </div>
+
+                    <div className="hidden h-12 w-12 items-center justify-center rounded-2xl bg-[#EFF6FF] text-xl text-[#2563EB] sm:flex">
+                      ◉
+                    </div>
                   </div>
 
-                  <div className="mt-4 h-2 overflow-hidden rounded-full bg-slate-200">
-                    <div
-                      className="h-full rounded-full bg-[#2563EB]"
-                      style={{
-                        width: `${reviewProgress}%`,
-                      }}
-                    />
-                  </div>
+                  {data.dueWords > 0 && (
+                    <div className="mt-6 rounded-2xl bg-[#F8FAFC] p-5">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm text-slate-500">
+                          Today&apos;s review
+                        </span>
 
-                  <p className="mt-3 text-xs text-slate-400">
-                    {reviewProgress}% of your daily review complete
-                  </p>
+                        <span className="text-sm font-semibold text-[#2563EB]">
+                          {data.dueWords}{" "}
+                          {data.dueWords === 1 ? "word" : "words"}
+                        </span>
+                      </div>
 
-                  <p className="mt-3 text-xs text-slate-400">
-                    {data.dueWords === 0
-                      ? "All caught up"
-                      : "Ready for your next review"}
-                  </p>
+                      <div className="mt-4 h-2 overflow-hidden rounded-full bg-slate-200">
+                        <div
+                          className="h-full rounded-full bg-[#2563EB]"
+                          style={{
+                            width: `${reviewProgress}%`,
+                          }}
+                        />
+                      </div>
+
+                      <p className="mt-3 text-xs text-slate-400">
+                        {reviewProgress}% of your daily review complete
+                      </p>
+
+                      <p className="mt-3 text-xs text-slate-400">
+                        {data.dueWords === 0
+                          ? "All caught up"
+                          : "Ready for your next review"}
+                      </p>
+                    </div>
+                  )}
+
+                  {data.dueWords > 0 ? (
+                    <Link
+                      href="/study"
+                      className="mt-5 inline-flex rounded-xl bg-[#172554] px-5 py-3 text-sm font-semibold text-white hover:bg-[#0F1C40]"
+                    >
+                      Start
+                    </Link>
+                  ) : null}
                 </div>
-
-                <Link
-                  href="/study"
-                  className="mt-5 inline-flex rounded-xl bg-[#172554] px-5 py-3 text-sm font-semibold text-white hover:bg-[#0F1C40]"
-                >
-                  {data.dueWords > 0 ? "Continue review" : "Practice words"}
-                </Link>
-              </div>
+              )}
 
               {/* Quick actions */}
               <div className="rounded-2xl border border-[#E2E8F0] bg-white p-6">
@@ -237,8 +191,35 @@ export default function Home() {
               </div>
             </section>
 
+            {/* Stats */}
+            <section className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+              <StatCard
+                label="Words saved"
+                value={data.totalWords}
+                detail="In your vocabulary"
+              />
+
+              <StatCard
+                label="Words learned"
+                value={data.learnedWords}
+                detail="Reviewed at least once"
+              />
+
+              <StatCard
+                label="Due for review"
+                value={data.dueWords}
+                detail="Ready to practice"
+              />
+
+              <StatCard
+                label="Recall rate"
+                value={`${data.recallRate}%`}
+                detail="Across your reviews"
+              />
+            </section>
+
             {/* Recent words */}
-            <RecentWords recentWords={recentWords} data={data} />
+            <RecentWords data={data} />
           </div>
         </section>
       </div>
