@@ -166,6 +166,11 @@ export default function StudyPage() {
               You&apos;re all caught up!
             </h1>
 
+            <p className="mt-3 font-medium text-emerald-600">
+              You reviewed {reviewedCount}{" "}
+              {reviewedCount === 1 ? "word" : "words"} this session.
+            </p>
+
             <p className="mx-auto mt-3 max-w-md leading-7 text-slate-500">
               There are no words due for review right now. Come back later and
               keep building your recall.
