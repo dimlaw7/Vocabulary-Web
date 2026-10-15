@@ -12,6 +12,8 @@ export default function StudyPage() {
   const [hintLevel, setHintLevel] = useState(0);
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [sessionTotal, setSessionTotal] = useState(0);
+  const [reviewedCount, setReviewedCount] = useState(0);
 
   const startedAt = useRef(Date.now());
 
@@ -25,6 +27,7 @@ export default function StudyPage() {
       //await new Promise((resolve) => setTimeout(resolve, 500)); // Simulate loading delay
       //SetTimeout(() => {}, 500); // Simulate loading delay
       const words = await getDueWords();
+      setSessionTotal((current) => (current === 0 ? words.length : current));
 
       if (words.length === 0) {
         setWord(null);
@@ -115,6 +118,7 @@ export default function StudyPage() {
       }));
 
       setResult(reviewResult);
+      setReviewedCount((current) => current + 1);
     } catch (error) {
       console.error("Failed to save review:", error);
     }
@@ -344,11 +348,20 @@ export default function StudyPage() {
         <div className="mb-8">
           <div className="flex items-center justify-between text-xs font-medium text-slate-400">
             <span>Practice</span>
-            <span>Recall the word</span>
+            <span>
+              {reviewedCount} of {sessionTotal} reviewed
+            </span>
           </div>
 
           <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-slate-200">
-            <div className="h-full w-1/3 rounded-full bg-[#2563EB]" />
+            <div
+              className="h-full w-1/3 rounded-full bg-[#2563EB]"
+              style={{
+                width: `${
+                  sessionTotal > 0 ? (reviewedCount / sessionTotal) * 100 : 0
+                }%`,
+              }}
+            />
           </div>
         </div>
 

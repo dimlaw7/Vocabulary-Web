@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 import { getDashboardData } from "../lib/dashboard";
 import Sidebar from "./components/Sidebar";
 import Header from "./components/Header";
-import Hero from "./components/Hero";
 import RecentWords from "./components/RecentWords";
 import StatCard from "./components/StatCard";
 
